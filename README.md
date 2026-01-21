@@ -1,1 +1,1 @@
-# mila-laravel-test
+# 🚀 Successfully Installed Laravel 12
