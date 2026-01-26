@@ -9,10 +9,10 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-![Screenshot](images/Screenshot 1.png)
-![Screenshot](images/Screenshot 2.png)
-![Screenshot](images/Screenshot 3.png)
-![Screenshot](images/Screenshot 4.png)
+![Screenshot](images/Screenshot%201.png)
+![Screenshot](images/Screenshot%202.png)
+![Screenshot](images/Screenshot%203.png)
+![Screenshot](images/Screenshot%204.png)
 
 ## About Laravel
 
