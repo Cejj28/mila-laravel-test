@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    
     /**
      * Display a listing of the resource.
      */
@@ -21,13 +20,11 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the incoming data
         $fields = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
         ]);
 
-        // Create and return the post
         $post = Post::create($fields);
         return $post;
     }
@@ -35,7 +32,8 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    // CHANGE: Use $id instead of Post $post
+    public function show($id)
     {
         return Post::findOrFail($id);
     }
@@ -43,15 +41,19 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $id)
+    // CHANGE: Use $id instead of Post $id
+    public function update(Request $request, $id)
     {
+        // 1. Find the post manually using the ID
         $post = Post::findOrFail($id);
 
+        // 2. Validate
         $fields = $request->validate([
             'title' => 'string',
             'body' => 'string',
         ]);
 
+        // 3. Update
         $post->update($fields);
         return $post;
     }
@@ -59,9 +61,13 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    // CHANGE: Use $id instead of Post $post
+    public function destroy($id)
     {
+        // 1. Find the post manually
         $post = Post::findOrFail($id);
+        
+        // 2. Delete it
         $post->delete();
         
         return response()->json(['message' => 'Post deleted']);
