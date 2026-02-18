@@ -13,7 +13,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        try {
+            $users = User::all();
+
+            return response()->json([
+                'message' => 'Users retrieved successfully',
+                'data' => $users,
+            ], 200);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve users',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -21,14 +34,32 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $fields = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-        ]);
+        try {
+            $fields = $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:8',
+            ]);
 
-        $user = User::create($fields);
-        return $user;
+            $user = User::create($fields);
+
+            return response()->json([
+                'message' => 'User created successfully',
+                'data' => $user,
+            ], 201);
+        }
+        catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create user',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -36,7 +67,25 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return User::findOrFail($id);
+        try {
+            $user = User::findOrFail($id);
+
+            return response()->json([
+                'message' => 'User retrieved successfully',
+                'data' => $user,
+            ], 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve user',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -44,16 +93,39 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
+        try {
+            $user = User::findOrFail($id);
 
-        $fields = $request->validate([
-            'name' => 'string',
-            'email' => 'email|unique:users,email,' . $id,
-            'password' => 'string|min:8',
-        ]);
+            $fields = $request->validate([
+                'name' => 'string',
+                'email' => 'email|unique:users,email,' . $id,
+                'password' => 'string|min:8',
+            ]);
 
-        $user->update($fields);
-        return $user;
+            $user->update($fields);
+
+            return response()->json([
+                'message' => 'User updated successfully',
+                'data' => $user,
+            ], 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+        catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update user',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -61,9 +133,24 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
 
-        return response()->json(['message' => 'User deleted']);
+            return response()->json([
+                'message' => 'User deleted successfully',
+            ], 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to delete user',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

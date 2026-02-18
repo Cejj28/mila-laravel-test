@@ -1,17 +1,16 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    $user = $request->user();
-    $name = $user ? $user->name : 'Clint John Mila';
+// Public auth routes
+Route::post('/register', [AuthController::class , 'register']);
+Route::post('/login', [AuthController::class , 'login']);
 
-    echo "<html><body>";
-    echo "<h1>Hello There!</h1>";
-    echo "<p>- " . $name . "</p>";
-    echo "</body></html>";
+// Protected routes (require Sanctum token)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class , 'logout']);
+    Route::apiResource('users', UserController::class);
 });
-
-Route::apiResource('users', UserController::class);
